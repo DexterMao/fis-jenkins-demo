@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kakasure.bqf.dao.mapper.LiveBqfGiftMapperExt">
+	<resultMap id="GiftMap" type="com.kakasure.bqf.dao.dto.LiveBqfGiftDto">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="live_affiliate_gift_id" property="liveAffiliateGiftId"
+			jdbcType="BIGINT" />
+		<result column="gift_num" property="giftNum" jdbcType="INTEGER" />
+		<result column="gift_name" property="giftName" jdbcType="VARCHAR" />
+		<result column="copyright_webcast_id" property="copyrightWebcastId"
+			jdbcType="VARCHAR" />
+		<result column="copyright_user_id" property="copyrightUserId"
+			jdbcType="VARCHAR" />
+		<result column="cash_copyright" property="cashCopyright"
+			jdbcType="DECIMAL" />
+		<result column="username_copyright" property="usernameCopyright"
+			jdbcType="VARCHAR" />
+		<result column="point_copyright" property="pointCopyright"
+			jdbcType="INTEGER" />
+		<result column="date_create" property="dateCreate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="getLiveBqfGiftList" resultMap="GiftMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select g.*,b.NAME name from yunear_live_bqf_gift
+		g,yunear_live_broadcast b where g.copyright_webcast_id =
+		b.LIVE_BROADCAST_ID and g.copyright_user_id
+		= #{params.userId}
+		<if test="params.name != null and params.name != ''">
+			and (g.gift_name LIKE
+			CONCAT(CONCAT('%',#{params.name}),'%') or b.NAME LIKE
+			CONCAT(CONCAT('%',#{params.name}),'%'))
+		</if>
+		<if test="params.startTime != '' and  params.startTime != null">
+			and g.DATE_CREATE &gt;'${params.startTime}'
+		</if>
+		<if test="params.endTime != '' and  params.endTime != null">
+			and g.DATE_CREATE &lt;'${params.endTime}'
+		</if>
+		ORDER BY g.DATE_CREATE DESC
+	</select>
+</mapper>

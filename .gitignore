@@ -1,0 +1,31 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+.DS_Store
+.project
+.classpath
+.settings/
+bin/
+*.log
+logs/
+target/
+*/target/
+*/*/target/
+upload/
+/target/
+<<<<<<< HEAD
+bin/
+=======
+src/main/webapp/static/qrcode
+src/main/webapp/static/uploadify/uploads/
+>>>>>>> hotfix/hotfix_20161027

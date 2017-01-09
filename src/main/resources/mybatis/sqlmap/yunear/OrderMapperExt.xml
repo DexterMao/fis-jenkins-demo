@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kakasure.bqf.dao.mapper.OrderMapperExt" >
+	<resultMap id="OrderRsltMap" type="com.kakasure.bqf.dao.dto.MultiOrderDto" >
+		<result column="media_name" property="mediaName" jdbcType="VARCHAR" />
+		<result column="cash_publish" property="cashPublish" jdbcType="DECIMAL" />
+		<result column="date_modify" property="dateModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<resultMap id="OrderMap" type="com.kakasure.bqf.dao.dto.OrderDto">
+		<id column="ORDER" property="order" jdbcType="VARCHAR" />
+		<result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR" />
+		<result column="TOTAL" property="total" jdbcType="DOUBLE" />
+		<result column="COMMISION" property="commision" jdbcType="DOUBLE" />
+		<result column="PRODUCT" property="product" jdbcType="VARCHAR" />
+		<result column="BUY_USER_ID" property="buyUserId" jdbcType="VARCHAR" />
+		<result column="BUY_USER_NAME" property="buyUserName" jdbcType="VARCHAR" />
+		<result column="MEDIA_ID" property="mediaId" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="INTEGER" />
+		<result column="COPYRIGHT_ID" property="copyrightId" jdbcType="VARCHAR" />
+		<result column="PUBLISH_ID" property="publishId" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="CASH_YUNEAR" property="cashYunear" jdbcType="DOUBLE" />
+		<result column="CASH_COPYRIGHT" property="cashCopyright"
+			jdbcType="DOUBLE" />
+		<result column="CASH_PUBLISH" property="cashPublish" jdbcType="DOUBLE" />
+		<result column="DATE_CREATE" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="DATE_MODIFY" property="dateModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="getMultiOrderList" resultMap="OrderRsltMap" parameterType="com.kakasure.lang.util.Page">
+		SELECT a.CASH_PUBLISH, a.DATE_MODIFY, b.MEDIA_NAME 
+		  FROM yunear_order a, yunear_copyrightmulti b
+		 WHERE b.COPYRIGHTMULTI_ID = a.MEDIA_ID 
+		   AND a.STATUS = 100
+		   AND a.PUBLISH_ID = #{params.userId}
+		   <if test="params.content!=null and params.content!=''">
+		   	AND b.media_name like #{params.content}
+		   </if>
+		   <if test="params.startTime!=null and params.startTime!=''">
+			AND a.DATE_MODIFY &gt;= #{params.startTime,jdbcType=TIMESTAMP}
+		   </if>
+		   <if test="params.endTime!=null and params.endTime!=''">
+			AND a.DATE_MODIFY &lt; DATE_ADD(#{params.endTime,jdbcType=TIMESTAMP},INTERVAL 1 DAY)
+		   </if>
+		   ORDER BY a.date_modify desc
+	</select>
+
+	<select id="getProOrderList" resultMap="OrderMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select o.*,w.name multiName from yunear_order o left join
+		view_media_and_webcast w on o.media_id = w.id where o.PRODUCT is
+		not
+		NULL and o.COPYRIGHT_ID
+		= #{params.userId}
+		<if test="params.type != null and params.type != ''">
+			and o.TYPE = #{params.type}
+		</if>
+		<if test="params.product != null and params.product != ''">
+			and (o.PRODUCT LIKE
+			CONCAT(CONCAT('%',#{params.product}),'%') or o.ORDER_NUMBER LIKE
+			CONCAT(CONCAT('%',#{params.product}),'%'))
+		</if>
+		<if test="params.status != '' and params.status != null">
+			and o.STATUS = #{params.status}
+		</if>
+		ORDER BY o.DATE_CREATE DESC
+	</select>
+
+	<select id="getMediaOrderList" resultMap="OrderMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select o.*,w.name multiName from yunear_order o left join
+		view_media_and_webcast w on o.media_id = w.id where o.PRODUCT is
+		NULL and o.COPYRIGHT_ID
+		= #{params.userId} and o.status = '100'
+		<if test="params.multiName != null and params.multiName != ''">
+			and w.name LIKE
+			CONCAT(CONCAT('%',#{params.multiName}),'%')
+		</if>
+		ORDER BY o.DATE_CREATE DESC
+	</select>
+</mapper>

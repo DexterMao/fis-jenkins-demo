@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kakasure.bqf.dao.mapper.LiveBroadcastMapperExt" >
+ <resultMap id="LiveBroadcastMap" type="com.kakasure.bqf.dao.dto.LiveBroadcastDto" >
+    <id column="LIVE_BROADCAST_ID" property="liveBroadcastId" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CHANNEL_TYPE" property="channelType" jdbcType="VARCHAR" />
+    <result column="DATE_START_TIME" property="dateStartTime" jdbcType="TIMESTAMP" />
+    <result column="DATE_END_TIME" property="dateEndTime" jdbcType="TIMESTAMP" />
+    <result column="DATE_START_INTERVAL" property="dateStartInterval" jdbcType="INTEGER" />
+    <result column="DATE_END_INTERVAL" property="dateEndInterval" jdbcType="INTEGER" />
+    <result column="PAY_TYPE" property="payType" jdbcType="CHAR" />
+    <result column="PRODUCT_CONCESSION" property="productConcession" jdbcType="DOUBLE" />
+    <result column="PICTURE_PATH" property="picturePath" jdbcType="VARCHAR" />
+    <result column="DESCR" property="descr" jdbcType="VARCHAR" />
+    <result column="ANCHOR_PATH" property="anchorPath" jdbcType="VARCHAR" />
+    <result column="GUESTS_PATH" property="guestsPath" jdbcType="VARCHAR" />
+    <result column="GUESTS_CODE_PATH" property="guestsCodePath" jdbcType="VARCHAR" />
+    <result column="ANCHOR_PASSWORD" property="anchorPassword" jdbcType="INTEGER" />
+    <result column="GUESTS_PASSWORD" property="guestsPassword" jdbcType="INTEGER" />
+    <result column="DATE_CREATE" property="dateCreate" jdbcType="TIMESTAMP" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="ATTENDEE_PATH" property="attendeePath" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DOUBLE" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="WEBCAST_ID" property="webcastId" jdbcType="VARCHAR" />
+    <result column="LIVE_STATUS" property="liveStatus" jdbcType="CHAR" />
+    <result column="SHOW_ID" property="showId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <select id="getLiveBroList" resultMap="LiveBroadcastMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select * from yunear_live_broadcast where IS_DELETE = '0' and USER_ID
+		= #{params.userId} 
+		<if test="params.PAY_TYPE != null and params.PAY_TYPE != ''">
+			and PAY_TYPE = #{params.PAY_TYPE}
+		</if>
+		<if test="params.NAME != null and params.NAME != ''">
+			and NAME LIKE
+			CONCAT(CONCAT('%',#{params.NAME}),'%')
+		</if>
+		<if test="params.status != '' and params.status != null">
+			<if test="params.status == '11'">
+				and DATE_START_TIME > #{params.date,jdbcType=TIMESTAMP}
+			</if>
+			<if test="params.status == '22' ">
+			<![CDATA[
+			and DATE_START_TIME <=#{params.date}
+			]]>
+				and DATE_END_TIME >= #{params.date,jdbcType=TIMESTAMP}
+			</if>
+			<if test="params.status == '33' ">
+			<![CDATA[
+			and DATE_END_TIME < #{params.date,jdbcType=TIMESTAMP}
+			]]>
+			</if>
+			<if test="params.status == '44'">
+			<![CDATA[
+			and DATE_END_TIME < #{params.date,jdbcType=TIMESTAMP}
+			]]>
+			</if>
+		</if>
+		ORDER BY DATE_CREATE DESC
+	</select>
+	
+	<select id="getLiveBroListFromKks" resultMap="LiveBroadcastMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select *,u.USERNAME user_name from yunear_live_broadcast a,sys_user u
+		where a.USER_ID = u.USER_ID and
+		a.IS_DELETE = '0'
+		AND a.channel_type = '02'
+		<if test="params.USER_ID!= null and params.USER_ID != ''">
+			and a.USER_ID = #{params.USER_ID}
+		</if>
+		<if test="params.PAY_TYPE != null and params.PAY_TYPE != ''">
+			and a.PAY_TYPE = #{params.PAY_TYPE}
+		</if>
+		<if test="params.ONEBEFORE != null and params.ONEBEFORE != ''">
+		<![CDATA[
+			and (a.DATE_END_INTERVAL - a.DATE_START_INTERVAL) <= 3600
+		]]>
+		</if>
+		<if test="params.ONEAFTER != null and params.ONEAFTER != ''">
+			and (a.DATE_END_INTERVAL - a.DATE_START_INTERVAL) >= 3600
+		</if>
+		<if test="params.NAME != null and params.NAME != ''">
+			and a.NAME LIKE
+			CONCAT(CONCAT('%',#{params.NAME}),'%')
+		</if>
+		<if test="params.DATE_START_TIME != null and params.DATE_START_TIME!= ''">
+		<![CDATA[
+			and a.DATE_START_TIME <= #{params.DATE_START_TIME,jdbcType=TIMESTAMP}
+			]]>
+		</if>
+		<if test="params.DATE_END_TIME != null and params.DATE_END_TIME != ''">
+			and a.DATE_END_TIME >= #{params.DATE_END_TIME,jdbcType=TIMESTAMP} 
+		</if>
+		<if test="params.status != '' and params.status != null">
+			<if test="params.status == '11'">
+				and a.DATE_START_TIME > #{params.date,jdbcType=TIMESTAMP}
+			</if>
+			<if test="params.status == '22' ">
+			<![CDATA[
+			and a.DATE_START_TIME <=#{params.date,jdbcType=TIMESTAMP}
+			]]>
+				and a.DATE_END_TIME >= #{params.date,jdbcType=TIMESTAMP}
+			</if>
+			<if test="params.status == '33' ">
+			<![CDATA[
+			and a.DATE_END_TIME < #{params.date,jdbcType=TIMESTAMP}
+			]]>
+			</if>
+			<if test="params.status == '44'">
+			<![CDATA[
+			and a.DATE_END_TIME < #{params.date,jdbcType=TIMESTAMP}
+			]]>
+			</if>
+		</if>
+		ORDER BY a.DATE_CREATE DESC
+	</select>
+</mapper>

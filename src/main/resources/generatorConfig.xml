@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<context id="kks">
+		<plugin type="com.kakasure.plugin.MyBatisGeneratorPlugin" />
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.0.71:3306/yunear" userId="root"
+			password="123456" />
+		<javaModelGenerator targetPackage="com.kakasure.bqf.dao.model"
+			targetProject="src/main/java" />
+		<sqlMapGenerator targetPackage="mybatis.sqlmap.yunear"
+			targetProject="src/main/resources" />
+		<javaClientGenerator targetPackage="com.kakasure.bqf.dao.mapper"
+			targetProject="src/main/java" type="XMLMAPPER" />
+		<!-- 注意：要生成自己在下面改，只生成你要的表，不要把所有的表都一起生成，防止改了一样的表导致冲突 -->
+		<table domainObjectName="MobileCode" tableName="common_mobile_code" />
+		<table domainObjectName="User" tableName="sys_user" />
+		<table domainObjectName="Role" tableName="sys_role" />
+		<table domainObjectName="Token" tableName="sso_token" />
+		
+		<table domainObjectName="Announcemulti" tableName="yunear_announcemulti" />
+		<table domainObjectName="AnnounceTheme" tableName="yunear_announce_theme" />
+		<table domainObjectName="Balance" tableName="yunear_balance" />
+		<table domainObjectName="Codenum" tableName="yunear_codenum" />
+		<table domainObjectName="CodenumDay" tableName="yunear_codenum_day" />
+		<table domainObjectName="Copyrightmulti" tableName="yunear_copyrightmulti" />
+		<table domainObjectName="CopyrightmultiFolder" tableName="yunear_copyrightmulti_folder" />
+		<table domainObjectName="Draw" tableName="yunear_draw" />
+		<table domainObjectName="DrawMessage" tableName="yunear_draw_message" />
+		<table domainObjectName="Folder" tableName="yunear_folder" />
+		<table domainObjectName="Labels" tableName="yunear_labels" />
+		<table domainObjectName="LiveBroadcast" tableName="yunear_live_broadcast" />
+		<table domainObjectName="LiveBalance" tableName="yunear_live_balance" />
+		<table domainObjectName="LiveBqfGift" tableName="yunear_live_bqf_gift" />
+		<table domainObjectName="Message" tableName="yunear_message" />
+		<table domainObjectName="MessageUser" tableName="yunear_message_user" />
+		<table domainObjectName="Order" tableName="yunear_order" />
+		<table domainObjectName="Theme" tableName="yunear_theme" />
+		<table domainObjectName="ThemeAnnounce" tableName="yunear_theme_announce" />
+		<table domainObjectName="ThemeProduct" tableName="yunear_theme_product" />
+		<table domainObjectName="Userplus" tableName="yunear_userplus" />
+	</context>
+</generatorConfiguration>

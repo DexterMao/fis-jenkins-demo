@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kakasure.bqf.dao.mapper.CopyrightmultiMapperExt">
+	<resultMap id="MultiRsltMap" type="com.kakasure.bqf.dao.dto.CopyrightmultiDto">
+		<result column="ANNOUNCEMULTI_ID" property="announcemultiId"
+			jdbcType="VARCHAR" />
+		<result column="media_name" property="mediaName" jdbcType="VARCHAR" />
+		<result column="IMG_LINK" property="imgLink" jdbcType="VARCHAR" />
+		<result column="pay_type" property="payType" jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="product_concession" property="productConcession"
+			jdbcType="VARCHAR" />
+		<result column="click_num" property="clickNum" jdbcType="INTEGER" />
+		<result column="scan_code_num" property="scanCodeNum" jdbcType="INTEGER" />
+		<result column="COPYRIGHTMULTI_ID" property="copyrightmultiId"
+			jdbcType="VARCHAR" />
+		<result column="SPREAD_NUM" property="spreadNum" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="CopyrightMap" type="com.kakasure.bqf.dao.dto.CopyrightmultiDto">
+
+		<id column="COPYRIGHTMULTI_ID" property="copyrightmultiId"
+			jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="MEDIA_NAME" property="mediaName" jdbcType="VARCHAR" />
+		<result column="KEYWORDS" property="keywords" jdbcType="VARCHAR" />
+		<result column="PAY_TYPE" property="payType" jdbcType="CHAR" />
+		<result column="PRICE" property="price" jdbcType="DOUBLE" />
+		<result column="DESCR" property="descr" jdbcType="VARCHAR" />
+		<result column="PICTUREPATH" property="picturepath" jdbcType="VARCHAR" />
+		<result column="PATH" property="path" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="CHAR" />
+		<result column="AUDIT_STATUS" property="auditStatus" jdbcType="CHAR" />
+		<result column="SPREAD_NUM" property="spreadNum" jdbcType="INTEGER" />
+		<result column="CLICK_NUM" property="clickNum" jdbcType="INTEGER" />
+		<result column="SCAN_CODE_NUM" property="scanCodeNum" jdbcType="INTEGER" />
+		<result column="DATE_CREATE" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="DATE_MODIFY" property="dateModify" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
+		<result column="CONCESSION" property="concession" jdbcType="DOUBLE" />
+		<result column="STRANGE_CONCESSION" property="strangeConcession"
+			jdbcType="DOUBLE" />
+		<result column="AIR_PRODUCTS" property="airProducts" jdbcType="CHAR" />
+		<result column="VIDEO_CATEGORY_ID" property="videoCategoryId"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_CONCESSION" property="productConcession"
+			jdbcType="DOUBLE" />
+		<result column="TRANS_STATUS" property="transStatus" jdbcType="CHAR" />
+		<result column="DATE_START_TIME" property="dateStartTime"
+			jdbcType="TIMESTAMP" />
+		<result column="DATE_END_TIME" property="dateEndTime" jdbcType="TIMESTAMP" />
+		<result column="LIVE_NUMBER" property="liveNumber" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="ApiCopyrightMap" type="com.kakasure.bqf.dao.dto.ApiCopyrightmultiDto">
+
+		<id column="COPYRIGHTMULTI_ID" property="copyrightmultiId"
+			jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="MEDIA_NAME" property="mediaName" jdbcType="VARCHAR" />
+		<result column="PAY_TYPE" property="payType" jdbcType="CHAR" />
+		<result column="PRICE" property="price" jdbcType="DOUBLE" />
+		<result column="DESCR" property="descr" jdbcType="VARCHAR" />
+		<result column="PICTUREPATH" property="picturepath" jdbcType="VARCHAR" />
+		<result column="PATH" property="path" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="CHAR" />
+		<result column="AUDIT_STATUS" property="auditStatus" jdbcType="CHAR" />
+		<result column="SPREAD_NUM" property="spreadNum" jdbcType="INTEGER" />
+		<result column="CLICK_NUM" property="clickNum" jdbcType="INTEGER" />
+		<result column="SCAN_CODE_NUM" property="scanCodeNum" jdbcType="INTEGER" />
+		<result column="DATE_CREATE" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="DATE_MODIFY" property="dateModify" jdbcType="TIMESTAMP" />
+		<result column="CONCESSION" property="concession" jdbcType="DOUBLE" />
+		<result column="VIDEO_CATEGORY_ID" property="videoCategoryId"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_CONCESSION" property="productConcession"
+			jdbcType="DOUBLE" />
+	</resultMap>
+	<!-- 获取推广的多媒体列表 -->
+	<select id="getPushedMutilList" resultMap="MultiRsltMap"
+		parameterType="com.kakasure.lang.util.Page">
+		SELECT b.COPYRIGHTMULTI_ID, b.media_name, a.IMG_LINK, b.type,b.price,
+		b.pay_type,c.category_name, b.product_concession, b.concession,
+		b.click_num, b.scan_code_num, a.ANNOUNCEMULTI_ID
+		FROM
+		yunear_announcemulti a, yunear_copyrightmulti b,
+		yunear_video_category
+		c
+		WHERE a.COPYRIGHTMULTI_ID=b.COPYRIGHTMULTI_ID
+		AND b.video_category_id
+		= c.video_category_id
+		AND a.user_id = #{params.userId}
+		AND a.is_delete =
+		'0'
+		AND b.AUDIT_STATUS = '00'
+		AND b.IS_DELETE = '0'
+		<if test="params.payType!=null and params.payType!=''">
+			AND b.pay_type = #{params.payType}
+		</if>
+		<if test="params.type!=null and params.type!=''">
+			AND b.type = #{params.type}
+		</if>
+		<if test="params.categoryId!=null and params.categoryId!=''">
+			AND c.video_category_id = #{params.categoryId}
+		</if>
+		<if test="params.content!=null and params.content!=''">
+			AND b.media_name like #{params.content}
+		</if>
+		ORDER BY a.DATE_MODIFY DESC,b.media_name,b.type, b.pay_type, c.category_name
+	</select>
+
+	<!-- 获取未推广的多媒体信息列表 -->
+	<select id="getUnExpandMultiList" resultMap="MultiRsltMap"
+		parameterType="com.kakasure.lang.util.Page">
+		SELECT b.COPYRIGHTMULTI_ID, b.media_name, b.type, b.pay_type,
+		c.category_name, u.USERNAME, b.PRICE,
+		b.product_concession,
+		b.concession, b.SPREAD_NUM, b.scan_code_num
+		FROM yunear_copyrightmulti
+		b, yunear_video_category c , sys_user u
+		WHERE b.video_category_id =
+		c.video_category_id
+		AND b.USER_ID = u.USER_ID
+		AND b.AUDIT_STATUS = '00'
+		AND b.IS_DELETE = '0'
+		<if test="params.userId!=null and params.userId!=''">
+			AND NOT EXISTS(
+				SELECT 1 FROM yunear_announcemulti
+				ya
+				WHERE ya.COPYRIGHTMULTI_ID = b.COPYRIGHTMULTI_ID
+				AND ya.IS_DELETE =
+				'0'
+				AND ya.USER_ID = #{params.userId})
+		</if>
+		<if test="params.payType!=null and params.payType!=''">
+			AND b.pay_type = #{params.payType}
+		</if>
+		<if test="params.type!=null and params.type!=''">
+			AND b.type = #{params.type}
+		</if>
+		<if test="params.categoryId!=null and params.categoryId!=''">
+			AND c.video_category_id = #{params.categoryId}
+		</if>
+		<if test="params.content!=null and params.content!=''">
+			AND b.media_name like #{params.content}
+		</if>
+		ORDER BY b.date_create DESC,b.media_name,b.type,b.price, b.pay_type, c.category_name
+	</select>
+
+	<select id="getCopyrightmultiList" resultMap="CopyrightMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select * from yunear_copyrightmulti where IS_DELETE = '0' and USER_ID
+		= #{params.userId} and TYPE != '03'
+		<if test="params.mediaName!=null and params.mediaName!=''">
+			and (MEDIA_NAME like concat('%',#{params.mediaName},'%')
+			or KEYWORDS like concat('%',#{params.mediaName},'%'))
+		</if>
+		<if test="params.type!=null and params.type!=''">
+			and TYPE=#{params.type}
+		</if>
+		<if test="params.auditStatus!=null and params.auditStatus!=''">
+			and AUDIT_STATUS=#{params.auditStatus}
+		</if>
+		<if test="params.payType!=null and params.payType!=''">
+			and PAY_TYPE=#{params.payType}
+		</if>
+		order by DATE_MODIFY desc
+	</select>
+
+	<select id="getCopyrightmultiListByKks" resultMap="ApiCopyrightMap"
+		parameterType="com.kakasure.lang.util.Page">
+		select * from yunear_copyrightmulti a where IS_DELETE = '0'
+		<if test="params.category != null and params.category != ''">
+			and a.VIDEO_CATEGORY_ID = #{params.category}
+		</if>
+		<if test="params.type != '03'">
+			<if test="params.type == '01'">
+				and a.TYPE = '01'
+			</if>
+			<if test="params.type == '02'">
+				and a.TYPE = '02'
+			</if>
+			<if test="params.type == null">
+				and a.type != '03'
+			</if>
+			and a.AUDIT_STATUS
+			= '00'
+		</if>
+		<if test="params.type == '03'">
+			and a.TYPE = '03'
+			<if test="params.hasFree == 'hasFree'">
+				and a.PAY_TYPE = '0'
+			</if>
+		</if>
+		<if test="params.MEDIA_NAME != null and params.MEDIA_NAME != ''">
+			and (a.MEDIA_NAME like "%"#{params.MEDIA_NAME}"%" or
+			a.keywords like "%"#{params.MEDIA_NAME}"%" or a.COPYRIGHTMULTI_ID in
+			(select b.COPYRIGHTMULTI_ID from yunear_labels b where
+			a.COPYRIGHTMULTI_ID = b.COPYRIGHTMULTI_ID and b.LABEL_NAME like
+			"%"#{params.MEDIA_NAME}"%"))
+		</if>
+		<if test="params.sortKey == 'storeProductConcession'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.PRODUCT_CONCESSION DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.PRODUCT_CONCESSION ASC
+			</if>
+		</if>
+		<if test="params.sortKey == 'copyRightConcession'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.PRODUCT_CONCESSION ASC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.PRODUCT_CONCESSION DESC
+			</if>
+
+		</if>
+		<if test="params.sortKey == 'msConcession'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.PRODUCT_CONCESSION DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.PRODUCT_CONCESSION ASC
+			</if>
+		</if>
+		<if test="params.sortKey == 'scanNum'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.click_num DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.click_num ASC
+			</if>
+		</if>
+		<if test="params.sortKey == 'dateCreate'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.DATE_CREATE DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.DATE_CREATE ASC
+			</if>
+		</if>
+		<if test="params.sortKey == 'dateStarTime'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.date_start_time DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.date_start_time ASC
+			</if>
+		</if>
+		<if test="params.sortKey == 'storeConcession'">
+			<if test="params.sortValue == 'desc'">
+				ORDER BY a.concession DESC
+			</if>
+			<if test="params.sortValue == 'asc'">
+				ORDER BY a.concession ASC
+			</if>
+		</if>
+	</select>
+
+	<select id="getCopyrightmultiByAnnounceId" resultType="com.kakasure.bqf.dao.model.Copyrightmulti"
+		parameterType="java.lang.String">
+		select
+		c.*
+		from
+		YUNEAR_COPYRIGHTMULTI
+		c,yunear_announcemulti a
+		where
+		c.COPYRIGHTMULTI_ID = a.COPYRIGHTMULTI_ID
+		AND
+		a.ANNOUNCEMULTI_ID
+		=
+		#{announceId}
+	</select>
+
+	<select id="updateCode" parameterType="java.lang.String">
+		update
+		YUNEAR_COPYRIGHTMULTI
+		set
+		SCAN_CODE_NUM = SCAN_CODE_NUM + 1
+		where
+		COPYRIGHTMULTI_ID = #{COPYRIGHTMULTI_ID}
+	</select>
+	
+	<select id="updateClickNum" parameterType="java.lang.String">
+		update
+		YUNEAR_COPYRIGHTMULTI
+		set
+		CLICK_NUM = CLICK_NUM + 1
+		where
+		COPYRIGHTMULTI_ID = #{COPYRIGHTMULTI_ID}
+	</select>
+	
+	<select id="updateScanCode" parameterType="java.lang.String">
+		update
+		YUNEAR_COPYRIGHTMULTI
+		set
+		SPREAD_NUM = SPREAD_NUM + 1
+		where
+		COPYRIGHTMULTI_ID = #{COPYRIGHTMULTI_ID}
+	</select>
+</mapper>

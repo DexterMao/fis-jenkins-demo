@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* CSS Document */
+body{ padding: 0px;margin: 0px; font-family: "microsoft YaHei"; background: #fbfbfb}
+.error{width:478px;height:547px;background:url(../images/bg_1.png) no-repeat; position: absolute; left: 50%; top: 50%; margin-left: -239px; margin-top: -273px;}
+.error404{width:100%;height:128px;background:url(../images/404.png) center center no-repeat; margin-top: 170px;}
+.errorerror{width:100%;height:128px;background:url(../images/error.png) center center no-repeat; margin-top: 170px;}
+.error_con{width:220px;height:136px; margin: 0 auto;}
+.error_con .error_text1{font-size:25px;color:#87837f; text-align: center;}
+.error_con .error_text2{font-size:16px;color:#87837f; text-align: center;margin-top:-15px; padding-bottom: 15px;}
+.error_con .error_btn{ margin: 0 auto}
+.error_con .btn1{border:0;border-radius:2px; float:left;background:#007cd5;color:#fff; font-size:14px; margin:0px 15px;text-align:center; width: 80px; height: 32px; line-height: 32px; display: block; text-decoration: none}
+.error_con .btn1:hover{background:#84c125;}
