@@ -2,9 +2,9 @@
 <!doctype html>
 <meta charset="utf-8">
 <title>咔咔硕</title>
-<meta name="description" content="咔咔硕" />
+<meta name="description" content="咔咔硕4" />
 <meta name="author" content="kakasure" />
-<meta name="keyword" content="咔咔硕" />
+<meta name="keyword" content="咔咔硕3" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/page/css/bootstrap.min.css" rel="stylesheet">
